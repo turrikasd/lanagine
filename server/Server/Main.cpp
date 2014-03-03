@@ -28,12 +28,13 @@ int main(int argc, char* argv[])
 			//err
 		}
 
-		std::cout << received << " bytes from " << sender << ". Says: " << data << std::endl;
+		std::cout << received << " bytes from " << sender << ":" << port << ". Says: " << data << std::endl;
+
+		if (socket.send(data, received, sender, port) != sf::Socket::Done)
+		{
+			// err
+		}
 	}
-
-
-	int holdInt;
-	std::cin >> holdInt;
 
 	socket.unbind();
 	return EXIT_SUCCESS;
