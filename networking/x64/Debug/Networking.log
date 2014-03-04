@@ -1,0 +1,15 @@
+﻿Build started 4.3.2014 10:25:44.
+     1>Project "D:\Documents\GitHub\lanagine\networking\Networking.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\CL.exe /c /I../include /Zi /nologo /W3 /WX- /sdl /Od /D WIN32 /D _DEBUG /D _LIB /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"x64\Debug\\" /Fd"x64\Debug\vc120.pdb" /Gd /TP /errorReport:prompt UDPServer.cpp
+         UDPServer.cpp
+       Lib:
+         C:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\x86_amd64\Lib.exe /OUT:"D:\Documents\GitHub\lanagine\sln\x64\Debug\Networking.lib" "sfml-network-d.lib" /LIBPATH:../lib /NOLOGO /MACHINE:X64 x64\Debug\Connection.obj
+         x64\Debug\ErrorReporter.obj
+         x64\Debug\UDPServer.obj
+         Networking.vcxproj -> D:\Documents\GitHub\lanagine\sln\x64\Debug\Networking.lib
+     1>Done Building Project "D:\Documents\GitHub\lanagine\networking\Networking.vcxproj" (Build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:00.61
