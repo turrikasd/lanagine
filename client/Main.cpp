@@ -2,11 +2,12 @@
 
 #include <iostream>
 #include <SFML\Network.hpp>
+#include <CompressedPacket.h>
 
 
 int main(int argc, char* argv[])
 {
-	sf::IpAddress serverIp = sf::IpAddress::LocalHost;
+	sf::IpAddress serverIp = "127.0.0.1";
 	sf::UdpSocket socket;
 
 	if (socket.bind(sf::Socket::AnyPort) != sf::Socket::Done)
@@ -17,25 +18,29 @@ int main(int argc, char* argv[])
 
 	for (;;)
 	{
-		char data[100];
-		std::cin >> data;
+		CompressedPacket packet;
+		char input[1024];
+		std::cin >> input;
+		packet << input;
 
-		if (socket.send(data, sizeof(data), serverIp, PORT))
+		if (socket.send(packet, serverIp, PORT))
 		{
 			// error
 		}
 
 		// Listen
-		char reply[100];
-		std::size_t received;
+		CompressedPacket reply;
 		sf::IpAddress sender;
 		unsigned short port;
-		if (socket.receive(reply, 100, received, sender, port) != sf::Socket::Done)
+		if (socket.receive(reply, sender, port) != sf::Socket::Done)
 		{
 			// err
 		}
 
-		std::cout << received << " bytes from server. Says: " << reply << std::endl;
+		char replyData[1024];
+		reply >> replyData;
+
+		std::cout << "Packet from server. Says: " << replyData << std::endl;
 
 	}
 

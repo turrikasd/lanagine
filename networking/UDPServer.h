@@ -7,6 +7,7 @@
 #include <vector>
 #include "Connection.h"
 #include <thread>
+#include "CompressedPacket.h"
 
 namespace nw
 {
@@ -22,7 +23,7 @@ namespace nw
 
 	private:
 		void ListenLoop();
-		void HandlePacket(sf::Packet packet, sf::IpAddress ip);
+		void HandlePacket(CompressedPacket packet, sf::IpAddress ip);
 
 	private:
 		bool listening;

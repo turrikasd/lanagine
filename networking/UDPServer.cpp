@@ -33,7 +33,7 @@ void UDPServer::ListenLoop()
 
 	while (listening)
 	{
-		sf::Packet packet;
+		CompressedPacket packet;
 		sf::IpAddress sender;
 		unsigned short port;
 
@@ -45,10 +45,12 @@ void UDPServer::ListenLoop()
 
 		std::thread msgThread = std::thread(&UDPServer::HandlePacket, this, packet, sender);
 		msgThread.detach();
+
+		socket.send(packet, sender, port);
 	}
 }
 
-void UDPServer::HandlePacket(sf::Packet packet, sf::IpAddress sender)
+void UDPServer::HandlePacket(CompressedPacket packet, sf::IpAddress sender)
 {
 	Report(NETWORK_NO_ERROR);
 }
