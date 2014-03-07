@@ -24,10 +24,13 @@
     <ClInclude Include="ErrorReporter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Connection.h">
+    <ClInclude Include="CompressedPacket.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CompressedPacket.h">
+    <ClInclude Include="NET_CODES.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Connection.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -38,13 +41,13 @@
     <ClCompile Include="ErrorReporter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Connection.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="CompressedPacket.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\include\EZLIB\easyzlib.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Connection.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

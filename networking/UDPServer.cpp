@@ -3,56 +3,51 @@
 
 using namespace nw;
 
-int UDPServer::ServerRegisterSocket(unsigned short listenPort)
+int UDPServer::ServerRegisterSocket(sf::UdpSocket* socket, unsigned short listenPort)
 {
 	if (listenPort == 0 || listenPort > 65535)
 		return NETWORK_ERROR_INVALID_PORT;
 
-	sf::UdpSocket socket;
 	this->listenPort = listenPort;
+
+	if (socket->bind(listenPort) != sf::Socket::Done)
+	{
+		Report(NETWORK_ERROR_SOCKET_NOT_BOUND);
+		return NETWORK_ERROR_SOCKET_NOT_BOUND;
+	}
 		
 	return NETWORK_NO_ERROR;
 }
 
-int UDPServer::ServerEnterListenMode()
+int UDPServer::GetNextPacket(sf::UdpSocket* socket, CompressedPacket* pPacket, Connection* pConnection)
 {
-	listening = true;
+	sf::IpAddress senderIp;
+	unsigned short port;
 
-	listenThread = std::thread(&UDPServer::ListenLoop, this);
+	if (socket->receive(*pPacket, senderIp, port) != sf::Socket::Done)
+	{
+		Report(NETWORK_ERROR_UDP_PACKET_FAULT);
+		return NETWORK_ERROR_UDP_PACKET_FAULT;
+	}
+
+	if (!Connection::hasConnection(&connections, Connection(senderIp, port)))
+	{
+		std::vector<Connection>::iterator it;
+		it = connections.end();
+		connections.insert(it, Connection(senderIp, port));
+	}
+
+	pConnection = &Connection(senderIp, port);
 
 	return NETWORK_NO_ERROR;
 }
 
-void UDPServer::ListenLoop()
+void UDPServer::SendAll(sf::UdpSocket* socket, CompressedPacket packet)
 {
-	if (socket.bind(listenPort) != sf::Socket::Done)
+	for (std::vector<Connection>::iterator it = connections.begin(); it != connections.end(); ++it)
 	{
-		Report(NETWORK_ERROR_SOCKET_NOT_BOUND);
-		return;
+		socket->send(packet, it->GetIP(), it->GetPort());
 	}
-
-	while (listening)
-	{
-		CompressedPacket packet;
-		sf::IpAddress sender;
-		unsigned short port;
-
-		if (socket.receive(packet, sender, port) != sf::Socket::Done)
-		{
-			Report(NETWORK_ERROR_UDP_PACKET_FAULT);
-			continue;
-		}
-
-		std::thread msgThread = std::thread(&UDPServer::HandlePacket, this, packet, sender);
-		msgThread.detach();
-
-		socket.send(packet, sender, port);
-	}
-}
-
-void UDPServer::HandlePacket(CompressedPacket packet, sf::IpAddress sender)
-{
-	Report(NETWORK_NO_ERROR);
 }
 
 UDPServer::UDPServer()
@@ -62,5 +57,5 @@ UDPServer::UDPServer()
 
 UDPServer::~UDPServer()
 {
-	socket.unbind();
+	//pSocket->unbind();
 }

@@ -8,6 +8,7 @@
 #include "Connection.h"
 #include <thread>
 #include "CompressedPacket.h"
+#include "NET_CODES.h"
 
 namespace nw
 {
@@ -18,17 +19,14 @@ namespace nw
 		UDPServer();
 		~UDPServer();
 
-		int ServerRegisterSocket(unsigned short listenPort);
-		int ServerEnterListenMode();
+		int ServerRegisterSocket(sf::UdpSocket* socket, unsigned short listenPort);
+		int GetNextPacket(sf::UdpSocket* socket, CompressedPacket* pPacket, Connection* pConnection);
 
-	private:
-		void ListenLoop();
-		void HandlePacket(CompressedPacket packet, sf::IpAddress ip);
+		void SendAll(sf::UdpSocket* socket, CompressedPacket packet);
 
 	private:
 		bool listening;
 		unsigned short listenPort;
-		sf::UdpSocket socket;
 		std::vector<Connection> connections;
 		std::thread listenThread;
 
