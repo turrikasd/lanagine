@@ -8,7 +8,7 @@ class World
 {
 public:
 	int NewPlayer(Connection* connection, char* name);
-	void MovePlayer(int playerId, int x, int y, int z);
+	void MovePlayer(int playerId, float x, float y, float z);
 	Player* GetPlayer(int id);
 
 public:

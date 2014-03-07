@@ -1,4 +1,5 @@
 #define PORT 54545
+#define MOVE_PACKET_INTERVAL 100 // milliseconds
 
 #include <iostream>
 #include <SFML\Network.hpp>
@@ -13,6 +14,7 @@ sf::Window window;
 World world;
 bool notReady = true;
 bool isActive = true;
+unsigned long lastMove = 0;
 
 
 void DrawingFunction()
@@ -59,13 +61,25 @@ void DrawingFunction()
 		{
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
 			{
-				world.GetClient()->Translate(-1, 0, 0);
+				world.GetClient()->Translate(-0.1f, 0, 0);
 				std::cout << "MOVING: " << world.GetClient()->playerId << std::endl;
 			}
 
 			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
 			{
-				world.GetClient()->Translate(1, 0, 0);
+				world.GetClient()->Translate(0.1f, 0, 0);
+				std::cout << "MOVING: " << world.GetClient()->playerId << std::endl;
+			}
+
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+			{
+				world.GetClient()->Translate(0.0f, 0.1f, 0);
+				std::cout << "MOVING: " << world.GetClient()->playerId << std::endl;
+			}
+
+			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+			{
+				world.GetClient()->Translate(0.0f, -0.1f, 0);
 				std::cout << "MOVING: " << world.GetClient()->playerId << std::endl;
 			}
 		}
@@ -98,7 +112,7 @@ void HandlePacket(CompressedPacket packet)
 	{
 		int playerId;
 		char name[32];
-		int x, y, z;
+		float x, y, z;
 		packet >> playerId >> name >> x >> y >> z;
 
 		world.NewPlayer(playerId, name, true); // checks if player already exists
@@ -107,11 +121,11 @@ void HandlePacket(CompressedPacket packet)
 		return;
 	}
 
-	if (net_code == NC_NEW_PLAYER)
+	else if (net_code == NC_NEW_PLAYER)
 	{
 		int playerId;
 		char name[32];
-		int x, y, z;
+		float x, y, z;
 		packet >> playerId >> name >> x >> y >> z;
 
 		world.NewPlayer(playerId, name); // checks if player already exists
@@ -119,10 +133,10 @@ void HandlePacket(CompressedPacket packet)
 		return;
 	}
 
-	if (net_code == NC_MOVEMENT)
+	else if (net_code == NC_MOVEMENT)
 	{
 		int playerID;
-		int x, y, z;
+		float x, y, z;
 		packet >> playerID >> x >> y >> z;
 
 		world.MovePlayer(playerID, x, y, z);
@@ -179,11 +193,13 @@ int main(int argc, char* argv[])
 
 	while (true)
 	{
-		if (notReady)
+		if (notReady || lastMove + MOVE_PACKET_INTERVAL > GetTickCount()) // Don't send if hasn't been MOVE_PACKET_INTERVAL since last update
 			continue; // Don't try to access player if it's not set yet
 
 		if (world.GetClient()->hasMoved)
 		{
+			lastMove = GetTickCount(); // Used to avoid updating too frequently
+
 			CompressedPacket packet;
 
 			packet << NC_MOVEMENT << world.GetClient()->playerId << world.GetClient()->x << world.GetClient()->y << world.GetClient()->z;

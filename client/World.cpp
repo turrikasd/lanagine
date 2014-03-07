@@ -43,7 +43,7 @@ void World::NewPlayer(int playerId, char* name, bool isYou)
 		Player::clientPlayerId = playerId;
 }
 
-void World::MovePlayer(int playerId, int x, int y, int z)
+void World::MovePlayer(int playerId, float x, float y, float z)
 {
 	playersMutex.lock();
 

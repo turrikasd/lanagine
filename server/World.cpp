@@ -14,7 +14,7 @@ int World::NewPlayer(Connection* connection, char* name)
 	return id;
 }
 
-void World::MovePlayer(int playerId, int x, int y, int z)
+void World::MovePlayer(int playerId, float x, float y, float z)
 {
 	players[playerId].SetPos(x, y, z);
 }

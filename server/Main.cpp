@@ -66,7 +66,7 @@ void HandlePacket(sf::UdpSocket* socket, CompressedPacket packet, Connection pSe
 	if (net_code == NC_MOVEMENT)
 	{
 		int playerID;
-		int x, y, z;
+		float x, y, z;
 		packet >> playerID >> x >> y >> z;
 
 		world.MovePlayer(playerID, x, y, z);

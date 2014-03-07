@@ -9,8 +9,8 @@ public:
 	Player(int playerId, char* name);
 	~Player();
 
-	void SetPos(int x, int y, int z);
-	void Translate(int x, int y, int z);
+	void SetPos(float x, float y, float z);
+	void Translate(float x, float y, float z);
 	void Draw();
 
 public:
@@ -18,7 +18,7 @@ public:
 	static int clientPlayerId;
 	int playerId;
 	bool hasMoved;
-	int x, y, z;
+	float x, y, z;
 
 private:
 

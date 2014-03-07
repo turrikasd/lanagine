@@ -14,14 +14,14 @@ Player::Player(int playerId, char* name)
 	this->z = 0;
 }
 
-void Player::SetPos(int x, int y, int z)
+void Player::SetPos(float x, float y, float z)
 {
 	this->x = x;
 	this->y = y;
 	this->z = z;
 }
 
-void Player::Translate(int x, int y, int z)
+void Player::Translate(float x, float y, float z)
 {
 	this->x += x;
 	this->y += y;
@@ -32,9 +32,9 @@ void Player::Translate(int x, int y, int z)
 
 void Player::Draw()
 {
-	glVertex3i(x - 1, y - 1, z - 5);
-	glVertex3i(x + 1, y - 1, z - 5);
-	glVertex3i(x, y + 1, z - 5);
+	glVertex3f(x - 1, y - 1, z - 5);
+	glVertex3f(x + 1, y - 1, z - 5);
+	glVertex3f(x, y + 1, z - 5);
 }
 
 

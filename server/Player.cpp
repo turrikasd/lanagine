@@ -11,7 +11,7 @@ Player::Player(int playerId, Connection* connection, char* name)
 	this->z = 0;
 }
 
-void Player::SetPos(int x, int y, int z)
+void Player::SetPos(float x, float y, float z)
 {
 	this->x = x;
 	this->y = y;

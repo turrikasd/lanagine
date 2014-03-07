@@ -10,7 +10,7 @@ class World
 public:
 	void NewPlayer(int playerId, char* name, bool isYou);
 	void NewPlayer(int playerId, char* name) { NewPlayer(playerId, name, false); } // Calls NewPlayer with false
-	void MovePlayer(int playerId, int x, int y, int z);
+	void MovePlayer(int playerId, float x, float y, float z);
 	Player* GetPlayer(int id);
 	Player* GetClient() { return GetPlayer(Player::clientPlayerId); }
 	void DrawPlayers();
