@@ -4,13 +4,14 @@
 #include <iostream>
 #include <SFML\Network.hpp>
 #include <SFML\Window.hpp>
+#include <SFML\Graphics.hpp>
 #include <SFML\OpenGL.hpp>
 #include <CompressedPacket.h>
 #include <thread>
 #include "World.h"
 #include <NET_CODES.h>
 
-sf::Window window;
+sf::RenderWindow window;
 World world;
 bool notReady = true;
 bool isActive = true;
@@ -98,6 +99,16 @@ void DrawingFunction()
 		world.DrawPlayers();
 
 		glEnd(); // triangles
+
+		window.pushGLStates(); // SFML drawing
+
+		sf::RectangleShape rectangle(sf::Vector2f(120, 50));
+		rectangle.setFillColor(sf::Color::Blue);
+		rectangle.setPosition(0, 0);
+		window.draw(rectangle);
+
+		window.popGLStates(); // /SFML drawing
+
 
 		window.display();
 	}
