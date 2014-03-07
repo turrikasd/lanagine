@@ -19,7 +19,7 @@ int UDPServer::ServerRegisterSocket(sf::UdpSocket* socket, unsigned short listen
 	return NETWORK_NO_ERROR;
 }
 
-int UDPServer::GetNextPacket(sf::UdpSocket* socket, CompressedPacket* pPacket, Connection* pConnection)
+Connection UDPServer::GetNextPacket(sf::UdpSocket* socket, CompressedPacket* pPacket)
 {
 	sf::IpAddress senderIp;
 	unsigned short port;
@@ -27,7 +27,7 @@ int UDPServer::GetNextPacket(sf::UdpSocket* socket, CompressedPacket* pPacket, C
 	if (socket->receive(*pPacket, senderIp, port) != sf::Socket::Done)
 	{
 		Report(NETWORK_ERROR_UDP_PACKET_FAULT);
-		return NETWORK_ERROR_UDP_PACKET_FAULT;
+		//return NETWORK_ERROR_UDP_PACKET_FAULT;
 	}
 
 	if (!Connection::hasConnection(&connections, Connection(senderIp, port)))
@@ -37,9 +37,9 @@ int UDPServer::GetNextPacket(sf::UdpSocket* socket, CompressedPacket* pPacket, C
 		connections.insert(it, Connection(senderIp, port));
 	}
 
-	pConnection = &Connection(senderIp, port);
+	return Connection(senderIp, port);
 
-	return NETWORK_NO_ERROR;
+	//return NETWORK_NO_ERROR;
 }
 
 void UDPServer::SendAll(sf::UdpSocket* socket, CompressedPacket packet)
@@ -48,6 +48,20 @@ void UDPServer::SendAll(sf::UdpSocket* socket, CompressedPacket packet)
 	{
 		socket->send(packet, it->GetIP(), it->GetPort());
 	}
+}
+
+void UDPServer::SendAllBut(sf::UdpSocket* socket, CompressedPacket packet, Connection skip)
+{
+	for (std::vector<Connection>::iterator it = connections.begin(); it != connections.end(); ++it)
+	{
+		if (!it->Equals(skip))
+			socket->send(packet, it->GetIP(), it->GetPort());
+	}
+}
+
+void UDPServer::SendOne(sf::UdpSocket* socket, CompressedPacket packet, Connection recipient)
+{
+	socket->send(packet, recipient.GetIP(), recipient.GetPort());
 }
 
 UDPServer::UDPServer()

@@ -21,6 +21,14 @@ unsigned short Connection::GetPort()
 	return port;
 }
 
+bool Connection::Equals(Connection other)
+{
+	if (ip == other.ip && port == other.port)
+		return true;
+
+	return false;
+}
+
 Connection::Connection(sf::IpAddress ip, unsigned short port)
 {
 	this->ip = ip;

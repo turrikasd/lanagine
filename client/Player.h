@@ -10,13 +10,17 @@ public:
 	~Player();
 
 	void SetPos(int x, int y, int z);
+	void Translate(int x, int y, int z);
 	void Draw();
 
 public:
+
+	static int clientPlayerId;
 	int playerId;
+	bool hasMoved;
+	int x, y, z;
 
 private:
 
 	char* name;
-	int x, y, z;
 };

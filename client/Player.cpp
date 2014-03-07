@@ -1,6 +1,9 @@
 #include "Player.h"
 #include <SFML\OpenGL.hpp>
 
+// static members
+int Player::clientPlayerId;
+
 Player::Player(int playerId, char* name)
 {
 	this->playerId = playerId;
@@ -16,6 +19,15 @@ void Player::SetPos(int x, int y, int z)
 	this->x = x;
 	this->y = y;
 	this->z = z;
+}
+
+void Player::Translate(int x, int y, int z)
+{
+	this->x += x;
+	this->y += y;
+	this->z += z;
+
+	this->hasMoved = true;
 }
 
 void Player::Draw()

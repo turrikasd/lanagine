@@ -15,8 +15,9 @@ public:
 	int playerId;
 	char* name;
 	int x, y, z;
+	Connection* connection;
 
 private:
 
-	Connection* connection;
+
 };

@@ -9,6 +9,7 @@ class World
 public:
 	int NewPlayer(Connection* connection, char* name);
 	void MovePlayer(int playerId, int x, int y, int z);
+	Player* GetPlayer(int id);
 
 public:
 	std::vector<Player> players;

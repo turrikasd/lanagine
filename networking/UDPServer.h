@@ -20,9 +20,11 @@ namespace nw
 		~UDPServer();
 
 		int ServerRegisterSocket(sf::UdpSocket* socket, unsigned short listenPort);
-		int GetNextPacket(sf::UdpSocket* socket, CompressedPacket* pPacket, Connection* pConnection);
+		Connection GetNextPacket(sf::UdpSocket* socket, CompressedPacket* pPacket);
 
 		void SendAll(sf::UdpSocket* socket, CompressedPacket packet);
+		void SendAllBut(sf::UdpSocket* socket, CompressedPacket packet, Connection skip);
+		void SendOne(sf::UdpSocket* socket, CompressedPacket packet, Connection recipient);
 
 	private:
 		bool listening;

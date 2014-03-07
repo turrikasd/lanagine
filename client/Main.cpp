@@ -11,6 +11,8 @@
 
 sf::Window window;
 World world;
+bool notReady = true;
+bool isActive = true;
 
 
 void DrawingFunction()
@@ -39,6 +41,33 @@ void DrawingFunction()
 				// adjust the viewport when the window is resized
 				glViewport(0, 0, event.size.width, event.size.height);
 			}
+
+			else if (event.type == sf::Event::GainedFocus)
+			{
+				isActive = true;
+			}
+
+			else if (event.type == sf::Event::LostFocus)
+			{
+				isActive = false;
+			}
+		}
+
+		// Input
+
+		if (isActive)
+		{
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+			{
+				world.GetClient()->Translate(-1, 0, 0);
+				std::cout << "MOVING: " << world.GetClient()->playerId << std::endl;
+			}
+
+			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+			{
+				world.GetClient()->Translate(1, 0, 0);
+				std::cout << "MOVING: " << world.GetClient()->playerId << std::endl;
+			}
 		}
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -51,10 +80,8 @@ void DrawingFunction()
 		glColor3f(1.0f, 0.0f, 0.0f); // RED
 
 		// Draw all players
-		for (std::vector<Player>::iterator it = world.players.begin(); it != world.players.end(); ++it)
-		{
-			it->Draw();
-		}
+
+		world.DrawPlayers();
 
 		glEnd(); // triangles
 
@@ -66,6 +93,19 @@ void HandlePacket(CompressedPacket packet)
 {
 	sf::Int16 net_code;
 	packet >> net_code;
+
+	if (net_code == NC_NEW_YOU)
+	{
+		int playerId;
+		char name[32];
+		int x, y, z;
+		packet >> playerId >> name >> x >> y >> z;
+
+		world.NewPlayer(playerId, name, true); // checks if player already exists
+		world.MovePlayer(playerId, x, y, z);
+		notReady = false;
+		return;
+	}
 
 	if (net_code == NC_NEW_PLAYER)
 	{
@@ -86,6 +126,7 @@ void HandlePacket(CompressedPacket packet)
 		packet >> playerID >> x >> y >> z;
 
 		world.MovePlayer(playerID, x, y, z);
+		return;
 	}
 }
 
@@ -110,7 +151,7 @@ void ListenForPackets(sf::UdpSocket* socket)
 
 int main(int argc, char* argv[])
 {
-	sf::IpAddress serverIp = "85.23.150.216";
+	sf::IpAddress serverIp = "127.0.0.1";
 	sf::UdpSocket socket;
 
 	if (socket.bind(sf::Socket::AnyPort) != sf::Socket::Done)
@@ -131,25 +172,45 @@ int main(int argc, char* argv[])
 		std::cin >> name;
 
 		CompressedPacket namePacket;
-		namePacket << (sf::Int16)NC_LOGIN << name;
+		namePacket << NC_LOGIN << name;
 
 		socket.send(namePacket, serverIp, PORT);
 	}
 
 	while (true)
 	{
+		if (notReady)
+			continue; // Don't try to access player if it's not set yet
+
+		if (world.GetClient()->hasMoved)
+		{
+			CompressedPacket packet;
+
+			packet << NC_MOVEMENT << world.GetClient()->playerId << world.GetClient()->x << world.GetClient()->y << world.GetClient()->z;
+
+			world.GetClient()->hasMoved = false;
+
+			if (socket.send(packet, serverIp, PORT))
+			{
+				// ERR
+			}
+		}
+
+
+		/*
 		int a, b, c, d;
 		CompressedPacket packet;
 		std::cin >> a;
 		std::cin >> b;
 		std::cin >> c;
 		std::cin >> d;
-		packet << (sf::Int16)NC_MOVEMENT << a << b << c << d;
+		packet << NC_MOVEMENT << a << b << c << d;
 
 		if (socket.send(packet, serverIp, PORT))
 		{
 			// error
 		}
+		*/
 	}
 
 	socket.unbind();

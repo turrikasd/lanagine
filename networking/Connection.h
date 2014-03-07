@@ -11,6 +11,7 @@ public:
 
 	sf::IpAddress GetIP();
 	unsigned short GetPort();
+	bool Equals(Connection other);
 
 	static bool hasConnection(std::vector<Connection>* connections, Connection connection);
 

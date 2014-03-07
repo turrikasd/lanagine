@@ -18,3 +18,14 @@ void World::MovePlayer(int playerId, int x, int y, int z)
 {
 	players[playerId].SetPos(x, y, z);
 }
+
+Player* World::GetPlayer(int id)
+{
+	for (std::vector<Player>::iterator it = players.begin(); it != players.end(); ++it)
+	{
+		if (it->playerId == id)
+			return &(*it);
+	}
+
+	return NULL;
+}
