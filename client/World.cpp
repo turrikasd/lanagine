@@ -1,4 +1,5 @@
 #include "World.h"
+#include <SFML\OpenGL.hpp>
 
 Player* World::GetPlayer(int id)
 {
@@ -62,4 +63,15 @@ void World::DrawPlayers()
 	}
 
 	playersMutex.unlock();
+}
+
+void World::DrawWorld()
+{
+	glVertex3f(-5, -1, -20);
+	glVertex3f(-5, - 1, 5);
+	glVertex3f(5, -1, 5);
+
+	glVertex3f(5, -1, 5);
+	glVertex3f(5, -1, -20);
+	glVertex3f(-5, -1, -20);
 }

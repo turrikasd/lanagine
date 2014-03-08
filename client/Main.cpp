@@ -83,6 +83,19 @@ void DrawingFunction()
 				world.GetClient()->Translate(0.0f, -0.1f, 0);
 				std::cout << "MOVING: " << world.GetClient()->playerId << std::endl;
 			}
+
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
+			{
+				world.GetClient()->Translate(0.0f, 0.0f, -0.1f);
+				std::cout << "MOVING: " << world.GetClient()->playerId << std::endl;
+			}
+
+			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::E))
+			{
+				world.GetClient()->Translate(0.0f, 0.0f, 0.1f);
+				std::cout << "MOVING: " << world.GetClient()->playerId << std::endl;
+			}
+
 		}
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -92,10 +105,11 @@ void DrawingFunction()
 
 		glBegin(GL_TRIANGLES);
 
-		glColor3f(1.0f, 0.0f, 0.0f); // RED
+		glColor3f(0.2f, 0.2f, 0.2f); // ???
+		world.DrawWorld();
 
 		// Draw all players
-
+		glColor3f(1.0f, 0.0f, 0.0f); // RED
 		world.DrawPlayers();
 
 		glEnd(); // triangles

@@ -14,6 +14,7 @@ public:
 	Player* GetPlayer(int id);
 	Player* GetClient() { return GetPlayer(Player::clientPlayerId); }
 	void DrawPlayers();
+	void DrawWorld();
 
 public:
 	std::vector<Player> players;
